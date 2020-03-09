@@ -259,9 +259,11 @@ class Mirai(MiraiProtocol):
   async def message_polling(self, exit_signal, queue, count=10):
     while not exit_signal():
       await asyncio.sleep(0.5)
-
-      result  = \
-        await super().fetchMessage(count)
+      try:
+        result = await super().fetchMessage(count)
+      except:
+        SessionLogger.exception("Uncaught errors:")
+        continue
       last_length = len(result)
       latest_result = []
       while True:
